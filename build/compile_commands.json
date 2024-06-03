@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/user/source/repos/QTHelloWorld/build",
-  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt6/QtGui -g -fPIC -o CMakeFiles/QTHelloWorld.dir/main.cpp.o -c /home/user/source/repos/QTHelloWorld/main.cpp",
-  "file": "/home/user/source/repos/QTHelloWorld/main.cpp"
-}
-]

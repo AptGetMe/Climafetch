@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./assets/Climafetch_Logo.png" alt="Climafetch Logo" style="width:500px;height:auto;">
+<img src="./assets/Climafetch_Logo.png" alt="Climafetch Logo" style="width:600px;height:auto;">
 
 ### Fun Bash Scripts 📃  Climafetch  ⛅
 
@@ -31,29 +31,48 @@ TODO:  Add instruction how to download release.  !These are just placeholders!
 >Windows Users!  You need to run a few extra commands first!  After that, you can install.
 
 - Install dependencies (they may already be installed):
-  ```sudo apt install inxi wget lolcat```
+  ```
+  sudo apt install inxi wget lolcat
+  ```
 - Download latest release:
-  ```wget https://github.com/AptGetMe/climafetch/releases/climafetch```
+  ```
+  wget https://github.com/AptGetMe/climafetch/releases/climafetch
+  ```
 - Allow execution permissions:
-  ```chmod +x climafetch```
+  ```
+  chmod +x climafetch
+  ```
 - Move to /usr/local/bin:
-  ```sudo mv climafetch /usr/local/bin```
+  ```
+  sudo mv climafetch /usr/local/bin
+  ```
 
 ## 🚀 Run
 
-Open a terminal and execute app.
-```climafetch```
+- Open a terminal and execute app.
+  ```
+  climafetch
+  ```
 
 ## 🗑️ Uninstall
 
-Open a terminal and remove script.
-```sudo rm /usr/local/bin/climafetch```
+- Open a terminal and remove script.
+  ```
+  sudo rm /usr/local/bin/climafetch
+  ```
 
 ## 🛠️ Build Contribute
 
-- Clone Github Repository https://github.com/AptGetMe/climafetch.git
+- Clone Github Repository
+  ```
+  git clone https://github.com/AptGetMe/climafetch.git
+  ```
 - In VSCode or Pulsar, open the cloned repo folder as a new project
-- Test to make sure the environment is working by running script in the intergrated terminal ./climafetch
+- Test to make sure the environment is working by running script in the intergrated terminal
+  ```
+  cd climafetch
+  ./climafetch
+  ```
 - Program away!
 - Open a new pull request to submit changes!
 
@@ -62,4 +81,4 @@ Open a terminal and remove script.
 If you enjoy this app, please star this repository and share it with your friends online! 😊
 
 ## 📝 License
-This project is licensed under the **MIT License**. 
+This project is licensed under the **MIT License**.

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./assets/Climafetch_Logo.png" alt="Climafetch Logo" style="width:600px;height:auto;">
+<img src="./assets/Climafetch_Logo.png" alt="Climafetch Logo" style="width:800px;height:auto;">
 
 ### Fun Bash Scripts 📃  Climafetch  ⛅
 
@@ -8,35 +8,41 @@
 
 See the current outdoor climate like [wthrr](https://github.com/ttytm/wthrr-the-weathercrab) or [wego](https://github.com/schachmat/wego) but display it like [neofetch](https://github.com/dylanaraps/neofetch)
 
-Climafetch aims to be an easy to use weather app that retrieves the current weather conditions and display them in a linux bash terminal. While Climafetch is pretty simple to use, please don't hesitate to check documentation for help installing and using it! Currently under development, but a release may be happening soon...
+**Climafetch** aims to be an easy to use weather app that retrieves the current weather conditions and displays them in a Linux bash terminal.  Here's some examples!
 
 ## ✨ Features
 <div align="center">
 
-<img src="./assets/Climafetch_Sunny.png" alt="Climafetch Sunny" style="width:500px;height:auto;">
-<img src="./assets/Climafetch_Night.png" alt="Climafetch Night" style="width:500px;height:auto;">
+<img src="./assets/Climafetch_Sunny.png" alt="Climafetch Sunny" style="width:800px;height:auto;">
 
+### Day Time 🌞
+
+<img src="./assets/Climafetch_Night.png" alt="Climafetch Night" style="width:800px;height:auto;">
+
+### Night Time 💫
 </div>
 
 ## 🧩 Install
 
-TODO:  Add instruction how to download release.  !These are just placeholders!
+Thank you for wanting to try **Climafetch** 🥰️  Hopefully, this guide will get you started!
 
 >[!IMPORTANT]
 >**Climafetch** is in development and is unstable.  
 >**Climafetch** has only been tested on Debian Linux system, but will probably work on other distros.  
->Mac and Windows is currently untested.
+>Mac and Windows is currently unsupported.
 
 >[!NOTE]
->Windows Users!  You need to run a few extra commands first!  After that, you can install.
+>Windows users!  Because Windows doesn't have bash, you need [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).  There is an issue open to try and integrate Windows for the next version!
+
+- Open a bash terminal
 
 - Install dependencies (they may already be installed):
   ```
-  sudo apt install inxi wget lolcat
+  sudo apt install inxi wget
   ```
 - Download latest release:
   ```
-  wget https://github.com/AptGetMe/climafetch/releases/climafetch
+  wget https://github.com/AptGetMe/Climafetch/releases/latest/download/climafetch
   ```
 - Allow execution permissions:
   ```
@@ -49,31 +55,37 @@ TODO:  Add instruction how to download release.  !These are just placeholders!
 
 ## 🚀 Run
 
-- Open a terminal and execute app.
-  ```
-  climafetch
-  ```
+Open a new terminal and execute app.
+```
+climafetch
+```
 
 ## 🗑️ Uninstall
 
-- Open a terminal and remove script.
-  ```
-  sudo rm /usr/local/bin/climafetch
-  ```
+Open a terminal and remove script.
+```
+sudo rm /usr/local/bin/climafetch
+```
 
 ## 🛠️ Build Contribute
 
+A bash terminal and a text editor is sufficient for developing bash scripts! However, here are my recommendations that may make the task easier.
+
 - Clone Github Repository
   ```
-  git clone https://github.com/AptGetMe/climafetch.git
+  git clone https://github.com/AptGetMe/Climafetch.git
   ```
-- In VSCode or Pulsar, open the cloned repo folder as a new project
+- In *Pulsar* (or *VSCode* if you prefer), open the cloned folder as a new project
 - Test to make sure the environment is working by running script in the intergrated terminal
   ```
-  cd climafetch
   ./climafetch
   ```
 - Program away!
+
+>[!TIP]
+>Develop on a **Linux** installation because *Bash* is the default shell
+>(**Debian 12** is what I use) and use the *ShellCheck* extention
+
 - Open a new pull request to submit changes!
 
 ## ⭐ Support the Project

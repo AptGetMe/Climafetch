@@ -1,11 +1,11 @@
 #!/bin/bash
-# climafetch (based off weather_cli) Version 0.1 by AptGetMe 2025
+# Climafetch (based off weather_cli) Version 0.2.0 by AptGetMe 2025
 #
 # Weather icons inspired by weather underground:  https://www.wunderground.com/
 # Ascii art provide by free website:  https://www.asciiart.eu/image-to-ascii
 
 # define version
-_version="0.1"
+_version="0.2.0"
 
 # global flag for daytime or nighttime
 _dayTime=true
@@ -123,7 +123,7 @@ function mostlyCloudy()
           "$_grey_BOLD_FG    =$_white_BOLD_FG.:.:.:.:.:.:.::.:.:::$_grey_BOLD_FG=    $_colorEnd"
           "$_grey_BOLD_FG    =$_white_BOLD_FG:.:.:.:.:.:.:.::.:.::$_grey_BOLD_FG==   $_colorEnd"
           "$_grey_BOLD_FG    =$_white_BOLD_FG::.:.:.:.:.:.:.:.::.:$_grey_BOLD_FG=    $_colorEnd"
-          "$_grey_BOLD_FG      ===================      $_colorEnd")               
+          "$_grey_BOLD_FG      ===================      $_colorEnd")
     else
     _out=("$_azure_BOLD_FG                x              $_colorEnd"
           "$_azure_BOLD_FG             xx$_blue_BOLD_FG;${_azure_BOLD_FG}x              $_colorEnd"
@@ -145,7 +145,7 @@ function mostlyCloudy()
 
 # greater than 70% cloud cover
 function cloudy()
-{                                                                 
+{
     _out=("$_grey_BOLD_FG              ==$_white_BOLD_FG::$_grey_BOLD_FG==           $_colorEnd"
           "$_grey_BOLD_FG         =====$_white_BOLD_FG:.:.:.:$_grey_BOLD_FG==        $_colorEnd"
           "$_grey_BOLD_FG       =$_white_BOLD_FG:.:.:.:.:.:.:.$_grey_BOLD_FG==       $_colorEnd"
@@ -163,6 +163,42 @@ function cloudy()
           "                               ")
 }
 
+## SCRIPT ENTRYPOINT:
+while getopts 'vh' _opt;
+do
+    case "$_opt" in
+        v)
+            _logo=( "           ;;;;;;;;    ..     ..   "
+                    "         ;;........;;  ..   ..     "
+                    "        ;;..........:; .. ..       "
+                    "    ;;;;;;:..........;    ..:.:..: "
+                    "  ;;.......;:.......;;;;;;         "
+                    " ;;................;;.....:;;      "
+                    " ;:.........................:;     "
+                    " :;.........................:;     "
+                    "   ;;:...................:;;;      "
+                    "   ++       -+      ++             "
+                    "  ++       -+      ++              ")
+            echo ""
+            _appInfo=$(figlet -f slant "Climafetch Version $_version")
+            paste <(printf "%s\n" "${_logo[@]}") <(printf "$_appInfo") | lolcat
+            exit
+            ;;
+        h)
+            ;&
+        ?)
+            echo -en "$_green_BOLD_FG"
+            figlet -c "Climafetch $_version help page"
+            echo -e "climafetch $_azure_BOLD_FG[-v]$_colorEnd $_orange_BOLD_FG[-h]$_colorEnd"
+            echo -e "  $_azure_BOLD_FG [-v]$_colorEnd show version"
+            echo -e "  $_orange_BOLD_FG [-h]$_colorEnd show this help page"
+            echo -e "$_green_BOLD_FG"
+            echo -e "example:$_colorEnd  get current climate conditions"
+            echo -e "climafetch"
+            exit
+    esac
+done
+
 # get current date with "date" cmd and store in variable
 _fullDate=$(date '+%A %B %d, %Y')
 echo "Gathering todays weather report $_fullDate"
@@ -173,7 +209,7 @@ trap 'rm -f $_tmpFile' EXIT
 
 # start "inxi" cmd in background to get weather
 # pipe output to tee command to write to tmp file
-# remove stdout 
+# remove stdout
 inxi -xxxw | tee "$_tmpFile" >/dev/null &
 
 # save PID and setup kill signal handling
@@ -381,7 +417,7 @@ fi
 # light rain and snow
 # shower snow
 # light shower snow
-# heavy shower snow 
+# heavy shower snow
 # sleet
 # shower sleet
 # light shower sleet

@@ -29,6 +29,50 @@ _colorEnd="\033[m"
 # global array to hold final output to screen
 _out=()
 
+# function that will insert ANSI color codes into array between 2 points
+# example
+# input = ("hello
+#          "world")
+# color = ("S E,\033[1;38;5;42m \033[m"
+#          "1 2 4,\033[1;38;5;255m \033[1;38;5;26m \033[m")
+function colorize()
+{
+    _input="hello"
+    _colorizer="1 2 4,\033[1;38;5;42m \033[1;38;5;214m \033[m"
+
+    IFS=',' read -ra _color <<< "$_colorizer"
+
+    declare -p _color
+
+    read -ra _pos <<< "${_color[0]}"
+    read -ra _col <<< "${_color[1]}"
+
+    declare -p _pos
+    declare -p _col
+
+    _offset=0
+    for _i in "${!_pos[@]}"
+    do
+        case "${_pos[$_i]}" in
+            "S")
+                _input="${_col[$_i]}${_input}"
+                ((_offset++))
+            ;;
+            "E")
+                _input="${_input}${_col[$_i]}"
+            ;;
+            ?)
+                _index=$((_pos[$_i] + _offset))
+                echo "$_index"
+                _input="${_input:0:_index}${_col[$_i]}${_input:_index}"
+                ((_offset+=${#_col[$_i]}))
+        esac
+    done
+
+    declare -p _input
+    echo -e "$_input"
+}
+
 # sunny skies less than 10% cloud cover
 function clear()
 {

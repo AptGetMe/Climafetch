@@ -31,17 +31,22 @@ _out=()
 
 # function that will insert ANSI color codes into string
 # example
-# _test=$(colorizeLine "hello world" "S 3 7,\033[1;38;5;226m \033[1;38;5;255m \033[m)
+# _test=$(colorizeLine "hello world,S 3 7,\033[1;38;5;226m \033[1;38;5;255m \033[m")
 # will put into $_test var the string "hello world" with "hel" as bold yellow foreground
 # and "lo w" as bold white foreground
 function colorizeLine()
 {
-    _input=$1
-    IFS=',' read -ra _color <<< "$2"
-    read -ra _pos <<< "${_color[0]}"
-    read -ra _data <<< "${_color[1]}"
+    # read in data string, split by string, position, and color info
+    IFS=',' read -ra _colorData <<< "$1"
+    _input="${_colorData[0]}"
+    read -ra _pos <<< "${_colorData[1]}"
+    read -ra _data <<< "${_colorData[2]}"
 
+    # offset keeps track of string growth as new color codes are inserted
     _offset=0
+
+    # go through each position and insert corresponding color code into _input
+    # at that location
     for _i in "${!_pos[@]}"
     do
         case "${_pos[$_i]}" in
@@ -52,12 +57,14 @@ function colorizeLine()
             "E")
                 _input="${_input}${_data[$_i]}"
             ;;
-            ?)
+            *)
                 _index=$((_pos[$_i] + _offset))
                 _input="${_input:0:_index}${_data[$_i]}${_input:_index}"
                 ((_offset+=${#_data[$_i]}))
         esac
     done
+
+    #return finished string with color codes
     echo -e "$_input"
 }
 
@@ -218,7 +225,7 @@ do
             ;;
         h)
             ;&
-        ?)
+        *)
             echo -en "$_green_BOLD_FG"
             figlet -c "Climafetch $_version help page"
             echo -e "climafetch $_azure_BOLD_FG[-v]$_colorEnd $_orange_BOLD_FG[-h]$_colorEnd"

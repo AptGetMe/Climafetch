@@ -102,11 +102,6 @@ function clear()
           "       ***   *****   ***       ,S E,$_yellow_BOLD_FG $_colorEnd"
           "              ***              ,S E,$_yellow_BOLD_FG $_colorEnd"
           "               *               ,S E,$_yellow_BOLD_FG $_colorEnd")
-
-          for _i in "${!_out[@]}"
-          do
-              _out[$_i]=$(colorizeLine "${_out[$_i]}")
-          done
     else
     _out=("$_azure_BOLD_FG           x                   $_colorEnd"
           "$_azure_BOLD_FG       xxxxx                   $_colorEnd"
@@ -515,7 +510,8 @@ esac
 # uncomment desired lines
 #_dayTime=true
 #_dayTime=false
-# clear
+clear
+colorizeArray _out
 #partlyCloudy
 #mostlyCloudy
 #cloudy

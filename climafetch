@@ -29,6 +29,21 @@ _colorEnd="\033[m"
 # global array to hold final output to screen
 _out=()
 
+# function that will insert ANSI color codes into array of strings
+# _test=("hello world,S E,\033[1;38;5;226m \033[m"
+#       "good grief,5 7 9,\033[1;38;5;42m \033[1;38;5;51m \033[m")
+# colorizeArray _test
+# will change each element of _test array from the string with color data
+# into the same string with color data inserted
+function colorizeArray()
+{
+    local -n _data=$1
+    for _i in "${!_data[@]}"
+    do
+        _data[$_i]=$(colorizeLine "${_data[$_i]}")
+    done
+}
+
 # function that will insert ANSI color codes into string
 # example
 # _test=$(colorizeLine "hello world,S 3 7,\033[1;38;5;226m \033[1;38;5;255m \033[m")
@@ -500,7 +515,7 @@ esac
 # uncomment desired lines
 #_dayTime=true
 #_dayTime=false
-clear
+# clear
 #partlyCloudy
 #mostlyCloudy
 #cloudy

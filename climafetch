@@ -103,21 +103,21 @@ function clear()
           "              ***              ,S E,$_yellow_BOLD_FG $_colorEnd"
           "               *               ,S E,$_yellow_BOLD_FG $_colorEnd")
     else
-    _out=("$_azure_BOLD_FG           x                   $_colorEnd"
-          "$_azure_BOLD_FG       xxxxx                   $_colorEnd"
-          "$_azure_BOLD_FG     xx$_blue_BOLD_FG;;:${_azure_BOLD_FG}xx                   $_colorEnd"
-          "$_azure_BOLD_FG    x$_blue_BOLD_FG;:;:;;${_azure_BOLD_FG}x                   $_colorEnd"
-          "$_azure_BOLD_FG   x$_blue_BOLD_FG;:;:;:;${_azure_BOLD_FG}x                   $_colorEnd"
-          "$_azure_BOLD_FG  x$_blue_BOLD_FG;:;:;:;:;${_azure_BOLD_FG}x                  $_colorEnd"
-          "$_azure_BOLD_FG  x$_blue_BOLD_FG;:;:;:;:;:${_azure_BOLD_FG}x                 $_colorEnd"
-          "$_azure_BOLD_FG  x$_blue_BOLD_FG;:;:;:;:;;:${_azure_BOLD_FG}xx               $_colorEnd"
-          "$_azure_BOLD_FG  x$_blue_BOLD_FG;:;:;:;:;:;;:${_azure_BOLD_FG}xx             $_colorEnd"
-          "$_azure_BOLD_FG  xx$_blue_BOLD_FG;:;:;:;:;:;:;:;${_azure_BOLD_FG}xxxx     x  $_colorEnd"
-          "$_azure_BOLD_FG   x$_blue_BOLD_FG;:;:;:;:;:;:;:;:;;:;:;:${_azure_BOLD_FG}xx  $_colorEnd"
-          "$_azure_BOLD_FG    xx$_blue_BOLD_FG;:;:;:;:;:;:;:;:;:;:${_azure_BOLD_FG}x.   $_colorEnd"
-          "$_azure_BOLD_FG      xx$_blue_BOLD_FG;:;:;:;:;:;:;:;:${_azure_BOLD_FG}xx     $_colorEnd"
-          "$_azure_BOLD_FG        xxx$_blue_BOLD_FG;:;:;:;:;:${_azure_BOLD_FG}xxx       $_colorEnd"
-          "$_azure_BOLD_FG            +xxxxxx            $_colorEnd")
+    _out=("           x                   ,S E,$_azure_BOLD_FG $_colorEnd"
+          "       xxxxx                   ,S E,$_azure_BOLD_FG $_colorEnd"
+          "     xx;;:xx                   ,S 7 10 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "    x;:;:;;x                   ,S 5 11 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "   x;:;:;:;x                   ,S 4 11 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "  x;:;:;:;:;x                  ,S 3 12 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "  x;:;:;:;:;:x                 ,S 3 13 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "  x;:;:;:;:;;:xx               ,S 3 14 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "  x;:;:;:;:;:;;:xx             ,S 3 16 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "  xx;:;:;:;:;:;:;:;xxxx     x  ,S 4 19 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "   x;:;:;:;:;:;:;:;:;;:;:;:xx  ,S 4 27 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "    xx;:;:;:;:;:;:;:;:;:;:x.   ,S 6 26 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "      xx;:;:;:;:;:;:;:;:xx     ,S 8 24 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "        xxx;:;:;:;:;:xxx       ,S 11 21 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "            +xxxxxx            ,S E,$_azure_BOLD_FG $_colorEnd")
     fi
 }
 
@@ -125,37 +125,37 @@ function clear()
 function partlyCloudy()
 {
     if [ $_dayTime = 'true' ]; then
-    _out=("$_yellow_BOLD_FG               *               $_colorEnd"
-          "$_yellow_BOLD_FG              ***              $_colorEnd"
-          "$_yellow_BOLD_FG       ***   *****   ***       $_colorEnd"
-          "$_yellow_BOLD_FG        ***************        $_colorEnd"
-          "$_yellow_BOLD_FG        ***$_orange_BOLD_FG  -=-=-$_yellow_BOLD_FG  ***        $_colorEnd"
-          "$_yellow_BOLD_FG  *******$_orange_BOLD_FG  =-=-=-=-=-$_yellow_BOLD_FG *******  $_colorEnd"
-          "$_yellow_BOLD_FG     ***$_orange_BOLD_FG  -=-=-=-=-=-=$_yellow_BOLD_FG ****    $_colorEnd"
-          "$_yellow_BOLD_FG       *$_orange_BOLD_FG =-=-=-=-=-=-=$_yellow_BOLD_FG *       $_colorEnd"
-          "$_yellow_BOLD_FG     ***$_orange_BOLD_FG  =-=-=-=-=-=-$_yellow_BOLD_FG ****    $_colorEnd"
-          "$_yellow_BOLD_FG  ***$_grey_BOLD_FG  ====$_orange_BOLD_FG  =-=-=-=-$_yellow_BOLD_FG *******  $_colorEnd"
-          "$_grey_BOLD_FG     =$_white_BOLD_FG::::::$_grey_BOLD_FG===$_orange_BOLD_FG  =$_yellow_BOLD_FG  ***        $_colorEnd"
-          "$_grey_BOLD_FG    =$_white_BOLD_FG:.:.:.:.:.:$_grey_BOLD_FG==$_yellow_BOLD_FG ****        $_colorEnd"
-          "$_grey_BOLD_FG  =$_white_BOLD_FG::.:.:.:.:.:.:$_grey_BOLD_FG=$_yellow_BOLD_FG    **       $_colorEnd"
-          "$_grey_BOLD_FG  =$_white_BOLD_FG:.:.:.:.:::.:$_grey_BOLD_FG==             $_colorEnd"
-          "$_grey_BOLD_FG   =============               $_colorEnd")
+    _out=("               *               ,S E,$_yellow_BOLD_FG $_colorEnd"
+          "              ***              ,S E,$_yellow_BOLD_FG $_colorEnd"
+          "       ***   *****   ***       ,S E,$_yellow_BOLD_FG $_colorEnd"
+          "        ***************        ,S E,$_yellow_BOLD_FG $_colorEnd"
+          "        ***  -=-=-  ***        ,S 11 18 E,$_yellow_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "  *******  =-=-=-=-=- *******  ,S 9 21 E,$_yellow_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "     ***  -=-=-=-=-=-= ****    ,S 8 22 E,$_yellow_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "       * =-=-=-=-=-=-= *       ,S 8 22 E,$_yellow_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "     ***  =-=-=-=-=-=- ****    ,S 8 22 E,$_yellow_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "  ***  ====  =-=-=-=- *******  ,S 5 11 21 E,$_yellow_BOLD_FG $_grey_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "     =::::::===  =  ***        ,S 6 12 15 18 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "    =:.:.:.:.:.:=  ****        ,S 5 16 17 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "  =::.:.:.:.:.:.:=    **       ,S 3 17 18 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "  =:.:.:.:.:::.:==             ,S 3 16 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "   =============               ,S E,$_grey_BOLD_FG $_colorEnd")
     else
-    _out=("$_azure_BOLD_FG            +                  $_colorEnd"
-          "$_azure_BOLD_FG         xx$_blue_BOLD_FG;${_azure_BOLD_FG}x                  $_colorEnd"
-          "$_azure_BOLD_FG       x+$_blue_BOLD_FG;;:${_azure_BOLD_FG}x                  $_colorEnd"
-          "$_azure_BOLD_FG     xx$_blue_BOLD_FG;;:;;${_azure_BOLD_FG}x                  $_colorEnd"
-          "$_azure_BOLD_FG    .x$_blue_BOLD_FG;:;;:;${_azure_BOLD_FG}xx                 $_colorEnd"
-          "$_azure_BOLD_FG    x$_blue_BOLD_FG;;;:;;;;${_azure_BOLD_FG}xx                $_colorEnd"
-          "$_azure_BOLD_FG    x$_blue_BOLD_FG;:;;:;:;;${_azure_BOLD_FG}xx               $_colorEnd"
-          "$_azure_BOLD_FG    x$_blue_BOLD_FG;;:;;:;:;;;${_azure_BOLD_FG}xx             $_colorEnd"
-          "$_azure_BOLD_FG    x$_blue_BOLD_FG;:;:.;;;:;:;;;${_azure_BOLD_FG}xx          $_colorEnd"
-          "$_grey_BOLD_FG      =======$_blue_BOLD_FG ;;:;;;;;;;${_azure_BOLD_FG}xxxxx  $_colorEnd"
-          "$_grey_BOLD_FG     =$_white_BOLD_FG:.:.:.:$_grey_BOLD_FG====$_blue_BOLD_FG  :;:;:;;${_azure_BOLD_FG}xx   $_colorEnd"
-          "$_grey_BOLD_FG   ==$_white_BOLD_FG.:.:.:..:.:.$_grey_BOLD_FG==$_blue_BOLD_FG ;;:;;${_azure_BOLD_FG}x     $_colorEnd"
-          "$_grey_BOLD_FG  =$_white_BOLD_FG:.:.:.:.:.:.:.:$_grey_BOLD_FG=$_azure_BOLD_FG ;xxx       $_colorEnd"
-          "$_grey_BOLD_FG  =$_white_BOLD_FG.:.:.:.:.:.:.:$_grey_BOLD_FG==            $_colorEnd"
-          "$_grey_BOLD_FG    ============               $_colorEnd")
+    _out=("            +                  ,S E,$_azure_BOLD_FG $_colorEnd"
+          "         xx;x                  ,S 11 12 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "       x+;;:x                  ,S 9 12 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "     xx;;:;;x                  ,S 7 12 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "    .x;:;;:;xx                 ,S 6 12 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "    x;;;:;;;;xx                ,S 5 13 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "    x;:;;:;:;;xx               ,S 5 14 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "    x;;:;;:;:;;;xx             ,S 5 16 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "    x;:;:.;;;:;:;;;xx          ,S 5 19 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "      ======= ;;:;;;;;;;xxxxx  ,S 13 24 E,$_grey_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "     =:.:.:.:====  :;:;:;;xx   ,S 6 13 18 26 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "   ==.:.:.:..:.:.== ;;:;;x     ,S 5 17 19 25 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "  =:.:.:.:.:.:.:.:= ;xxx       ,S 3 18 19 21 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "  =.:.:.:.:.:.:.:==            ,S 3 17 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "    ============               ,S E,$_grey_BOLD_FG $_colorEnd")
     fi
 }
 
@@ -163,51 +163,51 @@ function partlyCloudy()
 function mostlyCloudy()
 {
     if [ $_dayTime = 'true' ]; then
-    _out=("$_yellow_BOLD_FG               *               $_colorEnd"
-          "$_yellow_BOLD_FG              ***              $_colorEnd"
-          "$_yellow_BOLD_FG       ***   *****   ***       $_colorEnd"
-          "$_yellow_BOLD_FG        ***************        $_colorEnd"
-          "$_yellow_BOLD_FG        ***$_orange_BOLD_FG  -=-=-$_yellow_BOLD_FG  ***        $_colorEnd"
-          "$_grey_BOLD_FG       ====$_orange_BOLD_FG -=-=-=-=-$_yellow_BOLD_FG *******  $_colorEnd"
-          "$_grey_BOLD_FG     ==$_white_BOLD_FG::::::$_grey_BOLD_FG===$_orange_BOLD_FG -=-=-$_yellow_BOLD_FG ****    $_colorEnd"
-          "$_grey_BOLD_FG   ==$_white_BOLD_FG:.:.:.:.::$_grey_BOLD_FG =$_orange_BOLD_FG --=-$_yellow_BOLD_FG *       $_colorEnd"
-          "$_grey_BOLD_FG  =$_white_BOLD_FG:.::.:.:.:$_grey_BOLD_FG ==$_white_BOLD_FG:::$_grey_BOLD_FG==$_yellow_BOLD_FG *****    $_colorEnd"
-          "$_grey_BOLD_FG  =$_white_BOLD_FG:.:.$_grey_BOLD_FG =====$_white_BOLD_FG.::.:.::$_grey_BOLD_FG==$_yellow_BOLD_FG  ****  $_colorEnd"
-          "$_grey_BOLD_FG      ==$_white_BOLD_FG-::.::.::.:.::$_grey_BOLD_FG====     $_colorEnd"
-          "$_grey_BOLD_FG    =$_white_BOLD_FG.:.:.:.:.:.:.::.:.:::$_grey_BOLD_FG=    $_colorEnd"
-          "$_grey_BOLD_FG    =$_white_BOLD_FG:.:.:.:.:.:.:.::.:.::$_grey_BOLD_FG==   $_colorEnd"
-          "$_grey_BOLD_FG    =$_white_BOLD_FG::.:.:.:.:.:.:.:.::.:$_grey_BOLD_FG=    $_colorEnd"
-          "$_grey_BOLD_FG      ===================      $_colorEnd")
+    _out=("               *               ,S E,$_yellow_BOLD_FG $_colorEnd"
+          "              ***              ,S E,$_yellow_BOLD_FG $_colorEnd"
+          "       ***   *****   ***       ,S E,$_yellow_BOLD_FG $_colorEnd"
+          "        ***************        ,S E,$_yellow_BOLD_FG $_colorEnd"
+          "        ***  -=-=-  ***        ,S 11 18 E,$_yellow_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "       ==== -=-=-=-=- *******  ,S 11 21 E,$_grey_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "     ==::::::=== -=-=- ****    ,S 7 13 16 22 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "   ==:.:.:.:.:: = --=- *       ,S 5 15 17 22 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_orange_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "  =:.::.:.:.: ==:::== *****    ,S 3 13 16 19 21 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "  =:.:. =====.::.:.::==  ****  ,S 3 7 13 21 23 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_yellow_BOLD_FG $_colorEnd"
+          "      ==-::.::.::.:.::====     ,S 8 22 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "    =.:.:.:.:.:.:.::.:.:::=    ,S 5 26 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "    =:.:.:.:.:.:.:.::.:.::==   ,S 5 26 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "    =::.:.:.:.:.:.:.:.::.:=    ,S 5 26 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "      ===================      ,S 5 26 E,$_colorEnd")
     else
-    _out=("$_azure_BOLD_FG                x              $_colorEnd"
-          "$_azure_BOLD_FG             xx$_blue_BOLD_FG;${_azure_BOLD_FG}x              $_colorEnd"
-          "$_azure_BOLD_FG           :x$_blue_BOLD_FG;;:${_azure_BOLD_FG}x              $_colorEnd"
-          "$_azure_BOLD_FG          .x$_blue_BOLD_FG;:;;${_azure_BOLD_FG}x+             $_colorEnd"
-          "$_azure_BOLD_FG          x$_blue_BOLD_FG;;;:;;${_azure_BOLD_FG}x             $_colorEnd"
-          "$_grey_BOLD_FG       :===$_blue_BOLD_FG  :;:;;${_azure_BOLD_FG}xx           $_colorEnd"
-          "$_grey_BOLD_FG     ==$_white_BOLD_FG:.:.:$_grey_BOLD_FG==$_blue_BOLD_FG ;;:;;;${_azure_BOLD_FG}xx        $_colorEnd"
-          "$_grey_BOLD_FG    =$_white_BOLD_FG..:.:.:.:.:$_grey_BOLD_FG=$_blue_BOLD_FG ;:;;;;;;$_azure_BOLD_FG++x  $_colorEnd"
-          "$_grey_BOLD_FG  =$_white_BOLD_FG::.:.:.:.$_grey_BOLD_FG  :===$_blue_BOLD_FG  ;:;:;:${_azure_BOLD_FG}xx   $_colorEnd"
-          "$_grey_BOLD_FG  =$_white_BOLD_FG.:.:$_grey_BOLD_FG  ====$_white_BOLD_FG:.:.:.$_grey_BOLD_FG==$_azure_BOLD_FG ;xxx     $_colorEnd"
-          "$_grey_BOLD_FG   ==  ==$_white_BOLD_FG:.:..:.:.:.$_grey_BOLD_FG===        $_colorEnd"
-          "$_grey_BOLD_FG    ==$_white_BOLD_FG:.:.:.:.:.:.:.:.:.$_grey_BOLD_FG=      $_colorEnd"
-          "$_grey_BOLD_FG   ==$_white_BOLD_FG.:..:.:.:.:.:.:.:.:$_grey_BOLD_FG==     $_colorEnd"
-          "$_grey_BOLD_FG    =$_white_BOLD_FG:.:.:..:.:.:.:.:.:.$_grey_BOLD_FG=      $_colorEnd"
-          "$_grey_BOLD_FG      =================        $_colorEnd")
+    _out=("                x              ,S E,$_azure_BOLD_FG $_colorEnd"
+          "             xx;x              ,S 15 16 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "           :x;;:x              ,S 13 16 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "          .x;:;;x+             ,S 12 16 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "          x;;;:;;x             ,S 11 17 E,$_azure_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "       :===  :;:;;xx           ,S 11 18 E,$_grey_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "     ==:.:.:== ;;:;;;xx        ,S 7 12 14 21 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "    =..:.:.:.:.:= ;:;;;;;;++x  ,S 5 16 17 26 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "  =::.:.:.:.  :===  ;:;:;:xx   ,S 3 12 18 26 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "  =.:.:  ====:.:.:.== ;xxx     ,S 3 7 13 19 21 23 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_blue_BOLD_FG $_azure_BOLD_FG $_colorEnd"
+          "   ==  ==:.:..:.:.:.===        ,S 9 20 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "    ==:.:.:.:.:.:.:.:.:.=      ,S 6 24 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "   ==.:..:.:.:.:.:.:.:.:==     ,S 5 24 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "    =:.:.:..:.:.:.:.:.:.=      ,S 5 24 E,$_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "      =================        ,S E,$_grey_BOLD_FG $_colorEnd")
     fi
 }
 
 # greater than 70% cloud cover
 function cloudy()
 {
-    _out=("$_grey_BOLD_FG              ==$_white_BOLD_FG::$_grey_BOLD_FG==           $_colorEnd"
-          "$_grey_BOLD_FG         =====$_white_BOLD_FG:.:.:.:$_grey_BOLD_FG==        $_colorEnd"
-          "$_grey_BOLD_FG       =$_white_BOLD_FG:.:.:.:.:.:.:.$_grey_BOLD_FG==       $_colorEnd"
-          "$_grey_BOLD_FG    ====$_white_BOLD_FG.:.:.:.:.:.:.:.:.:$_grey_BOLD_FG==   $_colorEnd"
-          "$_grey_BOLD_FG  ==$_white_BOLD_FG:.:.:.:.:.:.:.:.:.:.:.:.$_grey_BOLD_FG=  $_colorEnd"
-          "$_grey_BOLD_FG  =$_white_BOLD_FG.:.:.:.:..:.:.:.:.:.:.:.:$_grey_BOLD_FG=  $_colorEnd"
-          "$_grey_BOLD_FG  =$_white_BOLD_FG:.:.:.:.:.:.:.:.:.:.:.:.$_grey_BOLD_FG==  $_colorEnd"
-          "$_grey_BOLD_FG   ========================    $_colorEnd"
+    _out=("              ==::==           ,S 16 18 E, $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "         =====:.:.:.:==        ,S 14 21 E, $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "       =:.:.:.:.:.:.:.==       ,S 8 22 E, $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "    ====.:.:.:.:.:.:.:.:.:==   ,S 8 26 E, $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "  ==:.:.:.:.:.:.:.:.:.:.:.:.=  ,S 4 28 E, $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "  =.:.:.:.:..:.:.:.:.:.:.:.:=  ,S 3 28 E, $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "  =:.:.:.:.:.:.:.:.:.:.:.:.==  ,S 3 27 E, $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
+          "   ========================    ,S E, $_grey_BOLD_FG $_colorEnd"
           "                               "
           "                               "
           "                               "
@@ -510,12 +510,12 @@ esac
 # uncomment desired lines
 #_dayTime=true
 #_dayTime=false
-clear
-colorizeArray _out
+#clear
 #partlyCloudy
 #mostlyCloudy
 #cloudy
 
+colorizeArray _out
 # print out the final results
 echo -e "${_out[0]}  $_green_BOLD_FG${_inxiPretty[0]}$_colorEnd ${_inxiPretty[1]}"
 echo -e "${_out[1]}  ----------------"

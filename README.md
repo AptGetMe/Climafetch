@@ -38,7 +38,7 @@ Thank you for wanting to try **Climafetch** 🥰️  Hopefully, this guide will 
 
 - Install dependencies (they may already be installed):
   ```
-  sudo apt install inxi wget
+  sudo apt install inxi wget figlet lolcat
   ```
 - Download latest release:
   ```

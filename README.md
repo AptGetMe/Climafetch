@@ -59,6 +59,11 @@ Open a new terminal and execute app.
 ```
 climafetch
 ```
+Here are some commandline options you can use
+```
+climafetch -v  # show version
+climafect -h   # show help page
+```
 
 ## 🗑️ Uninstall
 
@@ -74,6 +79,10 @@ A bash terminal and a text editor is sufficient for developing bash scripts! How
 - Clone Github Repository
   ```
   git clone https://github.com/AptGetMe/Climafetch.git
+  ```
+- Install the development dependencies
+  ```
+  sudo apt install inxi figlet lolcat
   ```
 - In *Pulsar* (or *VSCode* if you prefer), open the cloned folder as a new project
 - Test to make sure the environment is working by running script in the intergrated terminal

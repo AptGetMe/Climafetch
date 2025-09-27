@@ -5,7 +5,7 @@
 # Ascii art provide by free website:  https://www.asciiart.eu/image-to-ascii
 
 # define version
-_version="0.2.0"
+_version="0.3.0"
 
 # global flag for daytime or nighttime
 _dayTime=true

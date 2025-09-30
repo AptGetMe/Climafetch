@@ -32,6 +32,12 @@ _out=()
 # global array to hold weather ASCII icons
 _icon=()
 
+# global array to hold raw json weather data
+_json=""
+
+# GPS coords for Toledo Ohio US (41.65° N and -83.54° W) default location
+_toledo="41.65 -83.54"
+
 # function that will insert ANSI color codes into array of strings
 # _test=("hello world,S E,\033[1;38;5;226m \033[m"
 #       "good grief,5 7 9,\033[1;38;5;42m \033[1;38;5;51m \033[m")
@@ -84,6 +90,35 @@ function colorizeLine()
 
     #return finished string with color codes
     echo -e "$_input"
+}
+
+# fetches the weather json file from OpenMetro.com api
+# make sure to pass in location "latitude longitude"
+# example
+# getData "41.65 -83.54"
+# will return the weather data from Toledo Ohio (41.65° N and -83.54° W)
+function getData()
+{
+    # get latitude and longitude from first argument
+    read -r _lat _long <<< "$1"
+
+    # build api call to OpenMetro.com
+    _api=("latitude=$_lat"
+        "longitude=$_long"
+        "daily=sunrise,sunset"
+        "current=temperature_2m,weather_code,,wind_speed_10m,wind_direction_10m,cloud_cover,relative_humidity_2m,surface_pressure,rain"
+        "timezone=auto"
+        "wind_speed_unit=mph"
+        "temperature_unit=fahrenheit"
+        "precipitation_unit=inch")
+
+    # build url
+    _url="https://api.open-meteo.com/v1/forecast?$(IFS='&' ; echo "${_api[*]}" | tr -s ',')"
+    # echo "$_url"
+
+    # call api and save json
+    _json=$(wget -O- "$_url")
+    # echo "$_json" | jq '.'
 }
 
 # sunny skies less than 10% cloud cover

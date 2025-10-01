@@ -62,6 +62,20 @@ _isoSunrise=""
 _sunset=""
 _isoSunset=""
 
+# function that will decode the WCO weather code to text conditions description
+# full list of wco codes that OpenMetro uses:  https://open-meteo.com/en/docs#weather_variable_documentation
+# more should be added here...
+function decodeWCO()
+{
+    case "${1}" in
+        "0") echo "Clear sky" ;;
+        "1") echo "Mainly clear";;
+        "2") echo "Partly cloudy" ;;
+        "3") echo "Overcast" ;;
+        *) echo "unknown WCO code..."
+    esac
+}
+
 # function that will insert ANSI color codes into array of strings
 # _test=("hello world,S E,\033[1;38;5;226m \033[m"
 #       "good grief,5 7 9,\033[1;38;5;42m \033[1;38;5;51m \033[m")
@@ -149,8 +163,8 @@ function getData()
 function parseData()
 {
     _temperature=$(echo "$_json" | jq -r '"\(.current.temperature_2m) \(.current_units.temperature_2m)"')
-    _conditions=$(echo "$_json" | jq -r '"\(.current.weather_code) \(.current_units.weather_code)"')
-    _weatherCode=$(echo "$_json" | jq -r '"\(.current.weather_code) \(.current_units.weather_code)"')
+    _weatherCode=$(echo "$_json" | jq -r '"\(.current_units.weather_code) \(.current.weather_code)"')
+    _conditions=$(decodeWCO "${_weatherCode##* }")
 
     _windSpeed=$(echo "$_json" | jq -r '"\(.current.wind_speed_10m) \(.current_units.wind_speed_10m)"')
     _windDirection=$(echo "$_json" | jq -r '"\(.current.wind_direction_10m)\(.current_units.wind_direction_10m)"')
@@ -177,9 +191,9 @@ function parseData()
     _isoSunset=$(echo "$_json" | jq -r '"\(.daily.sunset[0]) \(.daily_units.sunset)"')
     _sunset=$(TZ=$_timezone date -d "${_isoSunset%% *}" +"%I:%M:%S %p, %Z")
 
-    # echo "$_temperature,$_conditions,$_weatherCode,$_wind,$_cloudCover,$_rain,"\
-    #      "$_humidity,$_pressure,$_elevation,$_locale,$_timezone,$_timezoneCode,$_currentTime,"\
-    #      "$_observationTime,$_observationInterval,$_sunrise,$_sunset"
+    echo "$_temperature,$_conditions,$_weatherCode,$_wind,$_cloudCover,$_rain,"\
+         "$_humidity,$_pressure,$_elevation,$_locale,$_timezone,$_timezoneCode,$_currentTime,"\
+         "$_observationTime,$_observationInterval,$_sunrise,$_sunset"
 }
 
 # sunny skies less than 10% cloud cover

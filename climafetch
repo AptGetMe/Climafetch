@@ -38,6 +38,30 @@ _json=""
 # GPS coords for Toledo Ohio US (41.65° N and -83.54° W) default location
 _toledo="41.65 -83.54"
 
+# climate data variables
+_temperature=""
+_conditions=""
+_weatherCode=""
+_wind=""
+_windSpeed=""
+_windDirection=""
+_cloudCover=""
+_rain=""
+_humidity=""
+_pressure=""
+_elevation=""
+_locale=""
+_timezone=""
+_timezoneCode=""
+_isoDate=""
+_currentTime=""
+_observationTime=""
+_observationInterval=""
+_sunrise=""
+_isoSunrise=""
+_sunset=""
+_isoSunset=""
+
 # function that will insert ANSI color codes into array of strings
 # _test=("hello world,S E,\033[1;38;5;226m \033[m"
 #       "good grief,5 7 9,\033[1;38;5;42m \033[1;38;5;51m \033[m")
@@ -119,6 +143,43 @@ function getData()
     # call api and save json
     _json=$(wget -O- "$_url")
     # echo "$_json" | jq '.'
+}
+
+# populates the climate data variables based on data in json
+function parseData()
+{
+    _temperature=$(echo "$_json" | jq -r '"\(.current.temperature_2m) \(.current_units.temperature_2m)"')
+    _conditions=$(echo "$_json" | jq -r '"\(.current.weather_code) \(.current_units.weather_code)"')
+    _weatherCode=$(echo "$_json" | jq -r '"\(.current.weather_code) \(.current_units.weather_code)"')
+
+    _windSpeed=$(echo "$_json" | jq -r '"\(.current.wind_speed_10m) \(.current_units.wind_speed_10m)"')
+    _windDirection=$(echo "$_json" | jq -r '"\(.current.wind_direction_10m)\(.current_units.wind_direction_10m)"')
+    _wind="$_windSpeed at $_windDirection"
+
+    _cloudCover=$(echo "$_json" | jq -r '"\(.current.cloud_cover)\(.current_units.cloud_cover)"')
+    _rain=$(echo "$_json" | jq -r '"\(.current.rain) \(.current_units.rain)"')
+
+    _humidity=$(echo "$_json" | jq -r '"\(.current.relative_humidity_2m)\(.current_units.relative_humidity_2m)"')
+    _pressure=$(echo "$_json" | jq -r '"\(.current.surface_pressure) \(.current_units.surface_pressure)"')
+    _elevation="$(echo "$_json" | jq -r '.elevation') meters"
+
+    _locale=$(echo "$_json" | jq -r '"\(.latitude)° \(.longitude)°"')
+    _timezone=$(echo "$_json" | jq -r '.timezone')
+    _timezoneCode=$(echo "$_json" | jq -r '.timezone_abbreviation')
+
+    _currentTime=$(date +"%a, %d %b %Y, %I:%M:%S %p, %Z")
+    _isoDate=$(echo "$_json" | jq -r '"\(.current.time) \(.current_units.time)"')
+    _observationTime=$(TZ=$_timezone date -d "${_isoDate%% *}" +"%a, %d %b %Y, %I:%M:%S %p, %Z")
+    _observationInterval=$(echo "$_json" | jq -r '"\(.current.interval) \(.current_units.interval)"')
+
+    _isoSunrise=$(echo "$_json" | jq -r '"\(.daily.sunrise[0]) \(.daily_units.sunrise)"')
+    _sunrise=$(TZ=$_timezone date -d "${_isoSunrise%% *}" +"%I:%M:%S %p, %Z")
+    _isoSunset=$(echo "$_json" | jq -r '"\(.daily.sunset[0]) \(.daily_units.sunset)"')
+    _sunset=$(TZ=$_timezone date -d "${_isoSunset%% *}" +"%I:%M:%S %p, %Z")
+
+    # echo "$_temperature,$_conditions,$_weatherCode,$_wind,$_cloudCover,$_rain,"\
+    #      "$_humidity,$_pressure,$_elevation,$_locale,$_timezone,$_timezoneCode,$_currentTime,"\
+    #      "$_observationTime,$_observationInterval,$_sunrise,$_sunset"
 }
 
 # sunny skies less than 10% cloud cover

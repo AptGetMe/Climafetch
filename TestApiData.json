@@ -1,0 +1,67 @@
+{
+  "latitude": 41.643627,
+  "longitude": -83.539474,
+  "generationtime_ms": 0.1266002655029297,
+  "utc_offset_seconds": -14400,
+  "timezone": "America/New_York",
+  "timezone_abbreviation": "GMT-4",
+  "elevation": 180,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°F",
+    "weather_code": "wmo code",
+    "wind_speed_10m": "mp/h",
+    "wind_direction_10m": "°",
+    "cloud_cover": "%",
+    "relative_humidity_2m": "%",
+    "surface_pressure": "hPa",
+    "rain": "inch"
+  },
+  "current": {
+    "time": "2025-09-30T21:15",
+    "interval": 900,
+    "temperature_2m": 64.9,
+    "weather_code": 0,
+    "wind_speed_10m": 4.8,
+    "wind_direction_10m": 37,
+    "cloud_cover": 0,
+    "relative_humidity_2m": 72,
+    "surface_pressure": 998.5,
+    "rain": 0
+  },
+  "daily_units": {
+    "time": "iso8601",
+    "sunrise": "iso8601",
+    "sunset": "iso8601"
+  },
+  "daily": {
+    "time": [
+      "2025-09-30",
+      "2025-10-01",
+      "2025-10-02",
+      "2025-10-03",
+      "2025-10-04",
+      "2025-10-05",
+      "2025-10-06"
+    ],
+    "sunrise": [
+      "2025-09-30T07:30",
+      "2025-10-01T07:31",
+      "2025-10-02T07:32",
+      "2025-10-03T07:33",
+      "2025-10-04T07:34",
+      "2025-10-05T07:35",
+      "2025-10-06T07:36"
+    ],
+    "sunset": [
+      "2025-09-30T19:17",
+      "2025-10-01T19:15",
+      "2025-10-02T19:14",
+      "2025-10-03T19:12",
+      "2025-10-04T19:10",
+      "2025-10-05T19:08",
+      "2025-10-06T19:07"
+    ]
+  }
+}

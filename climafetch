@@ -76,6 +76,33 @@ function decodeWCO()
     esac
 }
 
+# function to return the compass cardinal value from degrees (digit only)
+function decodeCompass()
+{
+    # remove degrees units if present and leave only number
+    _degree=$(echo $1 | tr -dc '0-9')
+
+    if (($_degree <= 11)) ; then echo "N"
+    elif (($_degree <= 33)) ; then echo "NNE"
+    elif (($_degree <= 56)) ; then echo "NE"
+    elif (($_degree <= 78)) ; then echo "ENE"
+    elif (($_degree <= 101)) ; then echo "E"
+    elif (($_degree <= 123)) ; then echo "ESE"
+    elif (($_degree <= 146)) ; then echo "SE"
+    elif (($_degree <= 168)) ; then echo "SSE"
+    elif (($_degree <= 191)) ; then echo "S"
+    elif (($_degree <= 213)) ; then echo "SSW"
+    elif (($_degree <= 236)) ; then echo "SW"
+    elif (($_degree <= 258)) ; then echo "WSW"
+    elif (($_degree <= 281)) ; then echo "W"
+    elif (($_degree <= 303)) ; then echo "WNW"
+    elif (($_degree <= 326)) ; then echo "NW"
+    elif (($_degree <= 348)) ; then echo "NNW"
+    elif (($_degree <= 360)) ; then echo "N"
+    else echo "($_degree) bad compass degrees..."
+    fi
+}
+
 # function that will insert ANSI color codes into array of strings
 # _test=("hello world,S E,\033[1;38;5;226m \033[m"
 #       "good grief,5 7 9,\033[1;38;5;42m \033[1;38;5;51m \033[m")
@@ -165,13 +192,15 @@ function parseData()
     # get temperature and weather conditions
     _temperature=$(echo "$_json" | jq -r '"\(.current.temperature_2m) \(.current_units.temperature_2m)"')
     _weatherCode=$(echo "$_json" | jq -r '"\(.current_units.weather_code) \(.current.weather_code)"')
+
     # call function to get text description from WCO code
     _conditions=$(decodeWCO "${_weatherCode##* }")
 
     # get wind speed, remove unnecessary '/', wind direction and combine into the one wind variable
     _windSpeed=$(echo "$_json" | jq -r '"\(.current.wind_speed_10m) \(.current_units.wind_speed_10m)"' | tr -d '/')
     _windDirection=$(echo "$_json" | jq -r '"\(.current.wind_direction_10m)\(.current_units.wind_direction_10m)"')
-    _wind="$_windSpeed at $_windDirection"
+    _windDirection=$(decodeCompass $_windDirection)
+    _wind="$_windSpeed from $_windDirection"
 
     # get cloud cover and rain only if > 0 inches
     _cloudCover=$(echo "$_json" | jq -r '"\(.current.cloud_cover)\(.current_units.cloud_cover)"')

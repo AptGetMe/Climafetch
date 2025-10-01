@@ -150,7 +150,7 @@ function getData()
         "temperature_unit=fahrenheit"
         "precipitation_unit=inch")
 
-    # build url
+    # build url by adding '&' between API elements and removing duplicate ','
     _url="https://api.open-meteo.com/v1/forecast?$(IFS='&' ; echo "${_api[*]}" | tr -s ',')"
     # echo "$_url"
 
@@ -162,40 +162,50 @@ function getData()
 # populates the climate data variables based on data in json
 function parseData()
 {
+    # get temperature and weather conditions
     _temperature=$(echo "$_json" | jq -r '"\(.current.temperature_2m) \(.current_units.temperature_2m)"')
     _weatherCode=$(echo "$_json" | jq -r '"\(.current_units.weather_code) \(.current.weather_code)"')
+    # call function to get text description from WCO code
     _conditions=$(decodeWCO "${_weatherCode##* }")
 
+    # get wind speed, remove unnecessary '/', wind direction and combine into the one wind variable
     _windSpeed=$(echo "$_json" | jq -r '"\(.current.wind_speed_10m) \(.current_units.wind_speed_10m)"' | tr -d '/')
     _windDirection=$(echo "$_json" | jq -r '"\(.current.wind_direction_10m)\(.current_units.wind_direction_10m)"')
     _wind="$_windSpeed at $_windDirection"
 
+    # get cloud cover and rain only if > 0 inches
     _cloudCover=$(echo "$_json" | jq -r '"\(.current.cloud_cover)\(.current_units.cloud_cover)"')
-    _rain=$(echo "$_json" | jq -r '"\(.current.rain) \(.current_units.rain)"')
+    if $(echo "$_json" | jq -e '.current.rain != 0') > /dev/null ; then
+        _rain=$(echo "$_json" | jq -r '"\(.current.rain) \(.current_units.rain)"')
+    fi
 
+    # get humidity, pressure with conversion to inHg with 2 decimal points of precision, and elevation
     _humidity=$(echo "$_json" | jq -r '"\(.current.relative_humidity_2m)\(.current_units.relative_humidity_2m)"')
     _pressure=$(echo "$_json" | jq -r '"\(.current.surface_pressure) \(.current_units.surface_pressure)"')
     _pressure="$(echo "${_pressure%% *} * 0.02953" | bc | xargs printf "%.2f") inHg"
     _elevation="$(echo "$_json" | jq -r '.elevation') meters"
 
-    _locale=$(echo "$_json" | jq -r '"\(.latitude)° \(.longitude)°"')
+    # get locale and timezone data.  round to 2 decimal places
+    _locale="$(echo "$_json" | jq -r '.latitude' | xargs printf "%.2f")° $(echo "$_json" | jq -r '.longitude' | xargs printf "%.2f")°"
     _timezone=$(echo "$_json" | jq -r '.timezone')
     _timezoneCode=$(echo "$_json" | jq -r '.timezone_abbreviation')
 
+    # get current time at current location, observation time at weather location and measurement intervals
     _currentTime=$(date +"%a, %d %b %Y, %I:%M:%S %p, %Z")
     _isoDate=$(echo "$_json" | jq -r '"\(.current.time) \(.current_units.time)"')
     _observationTime=$(TZ=$_timezone date -d "${_isoDate%% *}" +"%a, %d %b %Y, %I:%M:%S %p, %Z")
     _observationInterval=$(echo "$_json" | jq -r '"\(.current.interval) \(.current_units.interval)"')
     _observationInterval="$(date -d@${_observationInterval%% *} -u +%M) minutes"
 
+    # get sunrise and sunset times at weather observation location
     _isoSunrise=$(echo "$_json" | jq -r '"\(.daily.sunrise[0]) \(.daily_units.sunrise)"')
     _sunrise=$(TZ=$_timezone date -d "${_isoSunrise%% *}" +"%I:%M:%S %p, %Z")
     _isoSunset=$(echo "$_json" | jq -r '"\(.daily.sunset[0]) \(.daily_units.sunset)"')
     _sunset=$(TZ=$_timezone date -d "${_isoSunset%% *}" +"%I:%M:%S %p, %Z")
 
     # echo "$_temperature,$_conditions,$_weatherCode,$_wind,$_cloudCover,$_rain,"\
-    #     "$_humidity,$_pressure,$_elevation,$_locale,$_timezone,$_timezoneCode,$_currentTime,"\
-    #     "$_observationTime,$_observationInterval,$_sunrise,$_sunset"
+    #      "$_humidity,$_pressure,$_elevation,$_locale,$_timezone,$_timezoneCode,$_currentTime,"\
+    #      "$_observationTime,$_observationInterval,$_sunrise,$_sunset"
 }
 
 # sunny skies less than 10% cloud cover
@@ -333,10 +343,6 @@ function cloudy()
 }
 
 ## SCRIPT ENTRYPOINT:
-_json=$(jq '.' TestApiData.json)
-parseData "$_json"
-exit
-
 while getopts 'vh' _opt;
 do
     case "$_opt" in

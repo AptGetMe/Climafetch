@@ -166,7 +166,7 @@ function parseData()
     _weatherCode=$(echo "$_json" | jq -r '"\(.current_units.weather_code) \(.current.weather_code)"')
     _conditions=$(decodeWCO "${_weatherCode##* }")
 
-    _windSpeed=$(echo "$_json" | jq -r '"\(.current.wind_speed_10m) \(.current_units.wind_speed_10m)"')
+    _windSpeed=$(echo "$_json" | jq -r '"\(.current.wind_speed_10m) \(.current_units.wind_speed_10m)"' | tr -d '/')
     _windDirection=$(echo "$_json" | jq -r '"\(.current.wind_direction_10m)\(.current_units.wind_direction_10m)"')
     _wind="$_windSpeed at $_windDirection"
 
@@ -175,6 +175,7 @@ function parseData()
 
     _humidity=$(echo "$_json" | jq -r '"\(.current.relative_humidity_2m)\(.current_units.relative_humidity_2m)"')
     _pressure=$(echo "$_json" | jq -r '"\(.current.surface_pressure) \(.current_units.surface_pressure)"')
+    _pressure="$(echo "${_pressure%% *} * 0.02953" | bc | xargs printf "%.2f") inHg"
     _elevation="$(echo "$_json" | jq -r '.elevation') meters"
 
     _locale=$(echo "$_json" | jq -r '"\(.latitude)° \(.longitude)°"')
@@ -185,15 +186,16 @@ function parseData()
     _isoDate=$(echo "$_json" | jq -r '"\(.current.time) \(.current_units.time)"')
     _observationTime=$(TZ=$_timezone date -d "${_isoDate%% *}" +"%a, %d %b %Y, %I:%M:%S %p, %Z")
     _observationInterval=$(echo "$_json" | jq -r '"\(.current.interval) \(.current_units.interval)"')
+    _observationInterval="$(date -d@${_observationInterval%% *} -u +%M) minutes"
 
     _isoSunrise=$(echo "$_json" | jq -r '"\(.daily.sunrise[0]) \(.daily_units.sunrise)"')
     _sunrise=$(TZ=$_timezone date -d "${_isoSunrise%% *}" +"%I:%M:%S %p, %Z")
     _isoSunset=$(echo "$_json" | jq -r '"\(.daily.sunset[0]) \(.daily_units.sunset)"')
     _sunset=$(TZ=$_timezone date -d "${_isoSunset%% *}" +"%I:%M:%S %p, %Z")
 
-    echo "$_temperature,$_conditions,$_weatherCode,$_wind,$_cloudCover,$_rain,"\
-         "$_humidity,$_pressure,$_elevation,$_locale,$_timezone,$_timezoneCode,$_currentTime,"\
-         "$_observationTime,$_observationInterval,$_sunrise,$_sunset"
+    # echo "$_temperature,$_conditions,$_weatherCode,$_wind,$_cloudCover,$_rain,"\
+    #     "$_humidity,$_pressure,$_elevation,$_locale,$_timezone,$_timezoneCode,$_currentTime,"\
+    #     "$_observationTime,$_observationInterval,$_sunrise,$_sunset"
 }
 
 # sunny skies less than 10% cloud cover
@@ -331,6 +333,10 @@ function cloudy()
 }
 
 ## SCRIPT ENTRYPOINT:
+_json=$(jq '.' TestApiData.json)
+parseData "$_json"
+exit
+
 while getopts 'vh' _opt;
 do
     case "$_opt" in

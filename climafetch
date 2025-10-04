@@ -103,6 +103,46 @@ function decodeCompass()
     fi
 }
 
+# function that will play a ASCII animation until timeout or told to exit via kill
+# run in background
+function timer()
+{
+    _timeout=${1:-100}
+    _style=${2:-0}
+    echo $_style
+    case "$_style" in
+        1)
+            _spinner=$(echo -e '\U2600\UFE0F \U2600\UFE0F \U2600\UFE0F \U1F324\UFE0F \U26C5\UFE0F\UFE0F'`
+                    `'\U1F325\UFE0F \U2601\UFE0F \U1F327\UFE0F \U1F328\UFE0F \U1F327\UFE0F '`
+                    `'\U1F328\UFE0F \U1F327\UFE0F \U1F328\UFE0F \U1F329\UFE0F \U1F328\UFE0F '`
+                    `'\U1F327\UFE0F \U1F328\UFE0F \U2601\UFE0F \U1F325\UFE0F \U26C5\UFE0F\UFE0F'`
+                    `'\U1F324\UFE0F \U2600\UFE0F \U2600\UFE0F ')
+            _length=69
+            _chunkWidth=3
+        ;;
+        0) ;& *)
+            _spinner='-       \       |       /       '`
+                    `'*-      *\      *|      */      '`
+                    `'**-     **\     **|     **/     '`
+                    `'***-    ***\    ***|    ***/    '`
+                    `'****-   ****\   ****|   ****/   '`
+                    `'*****-  *****\  *****|  *****/  '`
+                    `'******- ******\ ******| ******/ '`
+                    `'*******-*******\*******|*******/'
+            _length=256
+            _chunkWidth=8
+        ;;
+    esac
+
+    tput civis
+    for i in $(seq 0 $_chunkWidth $(( _timeout * _chunkWidth )))
+    do
+        _offset=$(( i % $_length ))
+        tput cr
+        echo -en "[${_spinner:_offset:_chunkWidth}]"
+        sleep 0.1
+    done
+}
 # function that will insert ANSI color codes into array of strings
 # _test=("hello world,S E,\033[1;38;5;226m \033[m"
 #       "good grief,5 7 9,\033[1;38;5;42m \033[1;38;5;51m \033[m")

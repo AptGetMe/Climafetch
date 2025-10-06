@@ -134,7 +134,6 @@ function timer()
         ;;
     esac
 
-    tput civis
     for i in $(seq 0 $_chunkWidth $(( _timeout * _chunkWidth )))
     do
         _offset=$(( i % $_length ))
@@ -316,7 +315,7 @@ function clear()
 }
 
 # between 10% and 40% cloud cover
-function partlyCloudy()
+function mostlyClear()
 {
     if [ $_dayTime = 'true' ]; then
     _icon=("               *               ,S E,$_yellow_BOLD_FG $_colorEnd"
@@ -354,7 +353,7 @@ function partlyCloudy()
 }
 
 # between 40% and 70% cloud cover
-function mostlyCloudy()
+function partlyCloudy()
 {
     if [ $_dayTime = 'true' ]; then
     _icon=("               *               ,S E,$_yellow_BOLD_FG $_colorEnd"
@@ -448,284 +447,60 @@ do
 done
 
 # get current date with "date" cmd and store in variable
-_fullDate=$(date '+%A %B %d, %Y')
-echo "Gathering todays weather report $_fullDate"
+_date=$(date '+%m/%d/%Y')
 
-# create tmp file and setup clean up on exit
-_tmpFile=$(mktemp)
-trap 'rm -f $_tmpFile' EXIT
+# get desired location for weather report if none are provided, use default of Toledo Ohio
+_gpsCoords=${1:-$_toledo}
 
-# start "inxi" cmd in background to get weather
-# pipe output to tee command to write to tmp file
-# remove stdout
-inxi -xxxw | tee "$_tmpFile" >/dev/null &
+# get climate at gps location (or uncomment second line for local test data)
+getData "$_gpsCoords"
+#_json=$(jq '.' "$(dirname "$0")/TestApiData.json")
 
-# save PID and setup kill signal handling
-_inxiPID=$!
-trap 'kill $_inxiPID' SIGINT
-echo "Starting inxi weather process $_inxiPID"
+# parse the json weather data into the climate data variables
+parseData
 
-# turn cursor shape to steady underline
-echo -ne "\e[4 q"
-
-# while waiting for inxi cmd to exit, play ASCII animation
-while ps -p $_inxiPID >/dev/null;
-do
-    echo -en "-\b"
-    sleep 0.1
-    echo -en "\\\\\b"
-    sleep 0.1
-    echo -en "|\b"
-    sleep 0.1
-    echo -en "/\b"
-    sleep 0.1
-    echo -en "-\b"
-    sleep 0.1
-    echo -en "\\\\\b"
-    sleep 0.1
-    echo -en "|\b"
-    sleep 0.1
-    echo -en "/\b"
-    sleep 0.1
-    echo -en "-\b"
-    sleep 0.1
-    echo -en "*"
-done
-# restore cursor shape back to default
-echo -ne "\e[0 q"
-
-echo -e "          $_green_BOLD_FG Finished Success! $_colorEnd \n"
-
-# read inxi weather results from tmpFile, deliminate on spaces
-mapfile -d ' ' _inxiRaw < "$_tmpFile"
-
-# remove extra whitespaces and newlines
-_inxiPretty=()
-for _i in "${_inxiRaw[@]}"
-do
-    _line="$(echo "$_i" | xargs)"
-    if [[ $_line != "" ]]; then
-        _inxiPretty+=("$_line")
-    fi
-done
-
-# debug code to see array of weather output
-#for _i in "${!_inxiPretty[@]}"
-#do
-#    echo "$_i ${_inxiPretty[_i]}"
-#done
-
-# create arrays to hold catagories of inxi weather output
-_temperature=()
-_conditions=()
-_wind=()
-_cloudCover=()
-_humidity=()
-_pressure=()
-_locale=()
-_currentTime=()
-_observationTime=()
-_sunrise=()
-_sunset=()
-_source=()
-
-_set=""
-
-# split weather output array into catagories
-for _i in "${!_inxiPretty[@]}"
-do
-    case ${_inxiPretty[_i]} in
-        "temperature:")
-            _set="temperature"
-        ;;
-        "conditions:")
-            _set="conditions"
-        ;;
-        "wind:")
-            _set="wind"
-        ;;
-        "cloud")
-            _set="cloudCover"
-        ;;
-        "humidity:")
-            _set="humidity"
-        ;;
-        "pressure:")
-            _set="pressure"
-        ;;
-        "Locale:")
-            _set="locale"
-        ;;
-        "current")
-            _set="currentTime"
-        ;;
-        "observation")
-            _set="observationTime"
-        ;;
-        "sunrise:")
-            _set="sunrise"
-        ;;
-        "sunset:")
-            _set="sunset"
-        ;;
-        "Source:")
-            _set="source"
-        ;;
-    esac
-    case ${_set} in
-        "temperature")
-            _temperature+=("${_inxiPretty[_i]}")
-        ;;
-        "conditions")
-            _conditions+=("${_inxiPretty[_i]}")
-        ;;
-        "wind")
-            _wind+=("${_inxiPretty[_i]}")
-        ;;
-        "cloudCover")
-            _cloudCover+=("${_inxiPretty[_i]}")
-        ;;
-        "humidity")
-            _humidity+=("${_inxiPretty[_i]}")
-        ;;
-        "pressure")
-            _pressure+=("${_inxiPretty[_i]}")
-        ;;
-        "locale")
-            _locale+=("${_inxiPretty[_i]}")
-        ;;
-        "currentTime")
-            _currentTime+=("${_inxiPretty[_i]}")
-        ;;
-        "observationTime")
-            _observationTime+=("${_inxiPretty[_i]}")
-        ;;
-        "sunrise")
-            _sunrise+=("${_inxiPretty[_i]}")
-        ;;
-        "sunset")
-            _sunset+=("${_inxiPretty[_i]}")
-        ;;
-        "source")
-            _source+=("${_inxiPretty[_i]}")
-        ;;
-    esac
-done
-
-# determine if it is daytime or nighttime based on returned
-# sunrise and sunset times
-if [ "$(date +%s)" -ge "$(date -d "${_sunrise[1]}" +%s)" ] && [ "$(date +%s)" -le "$(date -d "${_sunset[1]}" +%s)" ]; then
+# determine if it is daytime or nighttime based on returned sunrise and sunset times
+if [ "$(date -d "${_isoDate%% *}" +%s)" -ge "$(date -d "${_isoSunrise%% *}" +%s)" ] && [ "$(date -d "${_isoDate%% *}" +%s)" -le "$(date -d "${_isoSunset%% *}" +%s)" ]; then
     _dayTime=true
 else
     _dayTime=false
 fi
 
-# few clouds
-# scattered clouds
-# broken clouds
-# overcast clouds
-
-# drizzle
-# drizzle rain
-# light intensity drizzle
-# heavy intensity drizzle
-# light intensity drizzle rain
-# heavy intensity drizzle rain
-# shower drizzle
-# shower rain and drizzle
-# heavy shower rain and drizzle
-
-# rain
-# light rain
-# moderate rain
-# heavy intensity rain
-# very heavy rain
-# extreme rain
-# freezing rain
-# shower rain
-# light intensity shower rain
-# heavy intensity shower rain
-# ragged shower rain
-
-# thunderstorm
-# light thunderstorm
-# heavy thunderstorm
-# ragged thunderstorm
-# thunderstorm with rain
-# thunderstorm with light rain
-# thunderstorm with heavy rain
-# thunderstorm with drizzle
-# thunderstorm with light drizzle
-# thunderstorm with heavy drizzle
-
-# snow
-# light snow
-# heavy snow
-# rain and snow
-# light rain and snow
-# shower snow
-# light shower snow
-# heavy shower snow
-# sleet
-# shower sleet
-# light shower sleet
-
-# mist
-# smoke
-# haze
-# sand/dust whirls
-# fog
-# sand
-# dust
-# volcanic ash
-# squalls
-# tornado
-
-# basic logic to pick correct weather icon image
-# from the current weather conditions from inxi
-_conditionsStr=${_conditions[*]:1}
-case ${_conditionsStr} in
-    "clear sky")
+# basic logic to pick correct weather icon image from the current weather conditions
+case $_conditions in
+    "Clear sky")
         clear
     ;;
-    "few clouds" | "scattered clouds")
+    "Mainly clear")
+        mostlyClear
+    ;;
+    "Partly cloudy")
         partlyCloudy
     ;;
-    "broken clouds")
-        mostlyCloudy
-    ;;
-    "overcast clouds")
+    "Overcast")
         cloudy
     ;;
 esac
-
-# debug code to test all weather conditions combinations
-# uncomment desired lines
-#_dayTime=true
-#_dayTime=false
-#clear
-#partlyCloudy
-#mostlyCloudy
-#cloudy
 
 # colorize raw icon string data
 colorizeArray _icon
 
 # populate final climate status
-_out+=("$_green_BOLD_FG${_inxiPretty[0]}$_colorEnd ${_inxiPretty[1]}")
+_out+=("${_green_BOLD_FG}Weather:$_colorEnd  Report for $_date")
 _out+=("----------------")
-_out+=("$_green_BOLD_FG${_temperature[0]}$_colorEnd ${_temperature[3]} ${_temperature[4]}")
-_out+=("$_green_BOLD_FG${_conditions[0]}$_colorEnd ${_conditions[*]:1}")
-_out+=("$_green_BOLD_FG${_wind[0]}$_colorEnd ${_wind[1]} ${_wind[2]} ${_wind[3]} ${_wind[8]} ${_wind[9]}")
-_out+=("$_green_BOLD_FG${_cloudCover[0]} ${_cloudCover[1]}$_colorEnd ${_cloudCover[*]:2}")
-_out+=("$_green_BOLD_FG${_humidity[0]}$_colorEnd ${_humidity[*]:1}")
-_out+=("$_green_BOLD_FG${_pressure[0]}$_colorEnd ${_pressure[3]} ${_pressure[4]}")
-_out+=("$_green_BOLD_FG${_locale[0]}$_colorEnd ${_locale[*]:1}")
-_out+=("$_green_BOLD_FG${_currentTime[0]} ${_currentTime[1]}$_colorEnd ${_currentTime[*]:2}")
-_out+=("$_green_BOLD_FG${_observationTime[0]} ${_observationTime[1]}$_colorEnd ${_observationTime[*]:2}")
-_out+=("$_green_BOLD_FG${_sunrise[0]}$_colorEnd ${_sunrise[*]:1}")
-_out+=("$_green_BOLD_FG${_sunset[0]}$_colorEnd ${_sunset[*]:1}")
-_out+=("$_green_BOLD_FG${_source[0]}$_colorEnd ${_source[*]:1}")
+_out+=("${_green_BOLD_FG}temperature:$_colorEnd  $_temperature")
+_out+=("${_green_BOLD_FG}conditions:$_colorEnd  $_conditions")
+_out+=("${_green_BOLD_FG}wind:$_colorEnd  $_wind")
+_out+=("${_green_BOLD_FG}cloud cover:$_colorEnd  $_cloudCover")
+_out+=("${_green_BOLD_FG}humidity:$_colorEnd  $_humidity")
+_out+=("${_green_BOLD_FG}pressure:$_colorEnd  $_pressure")
+_out+=("${_green_BOLD_FG}locale:$_colorEnd  $_locale")
+_out+=("${_green_BOLD_FG}timezone:$_colorEnd  $_timezone")
+_out+=("${_green_BOLD_FG}current time:$_colorEnd  $_currentTime")
+_out+=("${_green_BOLD_FG}observation time:$_colorEnd  $_observationTime")
+_out+=("${_green_BOLD_FG}sunrise:$_colorEnd  $_sunrise")
+_out+=("${_green_BOLD_FG}sunset:$_colorEnd  $_sunset")
+_out+=("${_green_BOLD_FG}source:$_colorEnd  OpenMetro")
 
 # print out the final results
 paste -d '\t\t' <(printf "%b\n" "${_icon[@]}") <(printf "%b\n" "${_out[@]}")

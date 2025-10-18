@@ -436,12 +436,14 @@ do
         *)
             echo -en "$_green_BOLD_FG"
             figlet -c "Climafetch $_version help page"
-            echo -e "climafetch $_azure_BOLD_FG[-v]$_colorEnd $_orange_BOLD_FG[-h]$_colorEnd"
+            echo -e "climafetch $_azure_BOLD_FG[-v]$_colorEnd $_orange_BOLD_FG[-h] $_white_BOLD_FG(location)$_colorEnd"
             echo -e "  $_azure_BOLD_FG [-v]$_colorEnd show version"
-            echo -e "  $_orange_BOLD_FG [-h]$_colorEnd show this help page"
-            echo -e "$_green_BOLD_FG"
-            echo -e "example:$_colorEnd  get current climate conditions"
-            echo -e "climafetch"
+            echo -e "  $_orange_BOLD_FG [-h]$_colorEnd show this help page\n"
+            echo -e "  $_white_BOLD_FG \"location\"$_colorEnd location in latitude and longitude coordinates\n"
+            echo -e "${_green_BOLD_FG}example:$_colorEnd  get current climate conditions for Toledo Ohio (default location)"
+            echo "climafetch"
+            echo -e "${_green_BOLD_FG}example:$_colorEnd  get current climate conditions for 46.78°N 92.10°W (Duluth Minnesoda)"
+            echo "climafetch \"46.78 -92.10\""
             exit
     esac
 done

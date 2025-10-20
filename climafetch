@@ -196,11 +196,10 @@ function colorizeLine()
     echo -e "$_input"
 }
 
-# fetches the weather json file from OpenMetro.com api
-# make sure to pass in location "latitude longitude"
+# fetches the weather json file from Open-Metro.com api
 # example
-# getData "41.65 -83.54"
-# will return the weather data from Toledo Ohio (41.65° N and -83.54° W)
+# getData "46.78 -92.10"
+# will return the weather data from 46.78°N 92.10°W (Duluth Minnesoda)
 function getData()
 {
     # get latitude and longitude from first argument
@@ -436,27 +435,51 @@ do
         *)
             echo -en "$_green_BOLD_FG"
             figlet -c "Climafetch $_version help page"
-            echo -e "climafetch $_azure_BOLD_FG[-v]$_colorEnd $_orange_BOLD_FG[-h] $_white_BOLD_FG(location)$_colorEnd"
+            echo -e "climafetch $_azure_BOLD_FG[-v]$_colorEnd $_orange_BOLD_FG[-h]$_white_BOLD_FG --$_yellow_BOLD_FG [latitude] [longitude]$_colorEnd"
             echo -e "  $_azure_BOLD_FG [-v]$_colorEnd show version"
-            echo -e "  $_orange_BOLD_FG [-h]$_colorEnd show this help page\n"
-            echo -e "  $_white_BOLD_FG \"location\"$_colorEnd location in latitude and longitude coordinates\n"
+            echo -e "  $_orange_BOLD_FG [-h]$_colorEnd show this help page"
+            echo ""
+            echo -e "  $_white_BOLD_FG --$_colorEnd separate options from arguments (required if entering location)"
+            echo ""
+            echo -e "  $_yellow_BOLD_FG [latitude]$_colorEnd decimal number for latitude of where the weather location is at"
+            echo -e "  $_yellow_BOLD_FG [longitude]$_colorEnd decimal number for longitude of where the weather location is at"
+            echo ""
             echo -e "${_green_BOLD_FG}example:$_colorEnd  get current climate conditions for Toledo Ohio (default location)"
             echo "climafetch"
             echo -e "${_green_BOLD_FG}example:$_colorEnd  get current climate conditions for 46.78°N 92.10°W (Duluth Minnesoda)"
-            echo "climafetch \"46.78 -92.10\""
+            echo "climafetch -- 46.78 -92.10"
             exit
     esac
 done
 
+# remove processed arguments
+shift $((OPTIND-1))
+if [ "$1" = "--" ]; then
+    shift;
+fi
+
+# basic input varification
+if [ "$#" -eq 0 ]; then
+    getData "$_toledo"
+# case for debug use test data
+elif [ "$1" = "TestApiData" ]; then
+    _json=$(jq '.' "$(dirname "$0")/TestApiData.json")
+# case for latitude and longitude coords
+elif [[ $1 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]] && [[ $2 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]]; then
+    if [ $(echo "$1>=-90 && $1<=90 && $2>=-180 && $2<=180" | bc) -eq 1 ]; then
+        getData "$1 $2"
+    else
+        echo "ERROR: gps coords out of range"
+        exit
+    fi
+# error case
+else
+    echo "ERROR:  bad input"
+    exit
+fi
+
 # get current date with "date" cmd and store in variable
 _date=$(date '+%m/%d/%Y')
-
-# get desired location for weather report if none are provided, use default of Toledo Ohio
-_gpsCoords=${1:-$_toledo}
-
-# get climate at gps location (or uncomment second line for local test data)
-getData "$_gpsCoords"
-#_json=$(jq '.' "$(dirname "$0")/TestApiData.json")
 
 # parse the json weather data into the climate data variables
 parseData

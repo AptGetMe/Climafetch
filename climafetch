@@ -241,7 +241,7 @@ function getData()
     # echo "$_json" | jq '.'
 
     # check if json is valid
-    if [ -z $_json ] ; then
+    if [ -z "$_json" ] ; then
         echo "ERROR empty json"
     elif [ $_err -ne 0 ] ; then
         case $_err in
@@ -547,7 +547,7 @@ _out+=("${_green_BOLD_FG}temperature:$_colorEnd  $_temperature")
 _out+=("${_green_BOLD_FG}conditions:$_colorEnd  $_conditions")
 _out+=("${_green_BOLD_FG}wind:$_colorEnd  $_wind")
 _out+=("${_green_BOLD_FG}cloud cover:$_colorEnd  $_cloudCover")
-if [ $_rain -ne 0 ]; then
+if [ -n "$_rain" ]; then
     _out+=("${_green_BOLD_FG}rain:$_colorEnd $_rain")
 fi
 _out+=("${_green_BOLD_FG}humidity:$_colorEnd  $_humidity")
@@ -562,4 +562,4 @@ _out+=("${_green_BOLD_FG}sunset:$_colorEnd  $_sunset")
 _out+=("${_green_BOLD_FG}source:$_colorEnd  Open-Metro.com")
 
 # print out the final results
-paste -d '\t\t' <(printf "%b\n" "${_icon[@]}") <(printf "%b\n" "${_out[@]}")
+paste <(printf "%b\n" "${_icon[@]}") <(printf "%b\n" "${_out[@]}") | column -t -s $'\t'

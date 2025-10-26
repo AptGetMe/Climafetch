@@ -219,9 +219,39 @@ function getData()
     _url="https://api.open-meteo.com/v1/forecast?$(IFS='&' ; echo "${_api[*]}" | tr -s ',')"
     # echo "$_url"
 
-    # call api and save json
-    _json=$(wget -O- "$_url")
+    # call api and save json response
+    _response=$(curl -sSf "$_url" 2>&1)
+    _err=$?
+    # echo "$_response"
+
+    # check for wget errors
+    if [ $_err -ne 0 ]; then
+        case $_err in
+            3) echo "ERROR bad url" ;;
+            6|7|55|56) echo "ERROR network problem" ;;
+            22) echo "ERROR server response $_response" ;;
+            *) echo "ERROR curl error $_err" ;;
+        esac
+        exit 1
+    fi
+
+    # use jq to parse api response into json variable
+    _json=$(echo "$_response" | jq -e 'if . == "" or . == {} or . == [] then null else . end')
+    _err=$?
     # echo "$_json" | jq '.'
+
+    # check if json is valid
+    if [ -z $_json ] ; then
+        echo "ERROR empty json"
+    elif [ $_err -ne 0 ] ; then
+        case $_err in
+            1) echo "ERROR json response false or null" ;;
+            2) echo "ERROR usage problem or system error $_json" ;;
+            4) echo "ERROR json invalid $_json" ;;
+            *) echo "ERROR jq error $_err" ;;
+        esac
+        exit 1
+    fi
 }
 
 # populates the climate data variables based on data in json
@@ -470,12 +500,12 @@ elif [[ $1 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]] && [[ $2 =~ ^[+-]?[0-9]*\.?[0-9]+$ ]]; t
         getData "$1 $2"
     else
         echo "ERROR: gps coords out of range"
-        exit
+        exit 1
     fi
 # error case
 else
     echo "ERROR:  bad input"
-    exit
+    exit 1
 fi
 
 # get current date with "date" cmd and store in variable
@@ -517,15 +547,19 @@ _out+=("${_green_BOLD_FG}temperature:$_colorEnd  $_temperature")
 _out+=("${_green_BOLD_FG}conditions:$_colorEnd  $_conditions")
 _out+=("${_green_BOLD_FG}wind:$_colorEnd  $_wind")
 _out+=("${_green_BOLD_FG}cloud cover:$_colorEnd  $_cloudCover")
+if [ $_rain -ne 0 ]; then
+    _out+=("${_green_BOLD_FG}rain:$_colorEnd $_rain")
+fi
 _out+=("${_green_BOLD_FG}humidity:$_colorEnd  $_humidity")
 _out+=("${_green_BOLD_FG}pressure:$_colorEnd  $_pressure")
 _out+=("${_green_BOLD_FG}locale:$_colorEnd  $_locale")
+_out+=("${_green_BOLD_FG}elevation:$_colorEnd  $_elevation")
 _out+=("${_green_BOLD_FG}timezone:$_colorEnd  $_timezone")
 _out+=("${_green_BOLD_FG}current time:$_colorEnd  $_currentTime")
 _out+=("${_green_BOLD_FG}observation time:$_colorEnd  $_observationTime")
 _out+=("${_green_BOLD_FG}sunrise:$_colorEnd  $_sunrise")
 _out+=("${_green_BOLD_FG}sunset:$_colorEnd  $_sunset")
-_out+=("${_green_BOLD_FG}source:$_colorEnd  OpenMetro")
+_out+=("${_green_BOLD_FG}source:$_colorEnd  Open-Metro.com")
 
 # print out the final results
 paste -d '\t\t' <(printf "%b\n" "${_icon[@]}") <(printf "%b\n" "${_out[@]}")

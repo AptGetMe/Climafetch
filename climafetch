@@ -108,8 +108,8 @@ function decodeCompass()
 function timer()
 {
     _timeout=${1:-100}
-    _style=${2:-0}
-    echo $_style
+    _style=${2:-$(($RANDOM % 2))}
+    # echo $_style
     case "$_style" in
         1)
             _spinner=$(echo -e '\U2600\UFE0F \U2600\UFE0F \U2600\UFE0F \U1F324\UFE0F \U26C5\UFE0F\UFE0F'`
@@ -202,6 +202,11 @@ function colorizeLine()
 # will return the weather data from 46.78°N 92.10°W (Duluth Minnesoda)
 function getData()
 {
+    # start timer
+    echo -en "   \t\tgathering weather data"
+    tput cr
+    timer & TIMER_PID=$!
+
     # get latitude and longitude from first argument
     read -r _lat _long <<< "$1"
 
@@ -220,17 +225,23 @@ function getData()
     # echo "$_url"
 
     # call api and save json response
-    _response=$(curl -sSf "$_url" 2>&1)
+    _response=$(curl -sSf -m 30 "$_url" 2>&1)
     _err=$?
     # echo "$_response"
+
+    # stop timer
+    sleep 2
+    kill $TIMER_PID
+    tput cr el
 
     # check for wget errors
     if [ $_err -ne 0 ]; then
         case $_err in
-            3) echo "ERROR bad url" ;;
-            6|7|55|56) echo "ERROR network problem" ;;
-            22) echo "ERROR server response $_response" ;;
-            *) echo "ERROR curl error $_err" ;;
+            3) echo -e "[✗]\t\tERROR bad url" ;;
+            6|7|55|56) echo -e "[✗]\t\tERROR network problem" ;;
+            22) echo -e "[✗]\t\tERROR server response $_response" ;;
+            28) echo -e "[✗]\t\tERROR curl timeout" ;;
+            *) echo -e "[✗]\t\tERROR curl error $_err" ;;
         esac
         exit 1
     fi
@@ -245,18 +256,24 @@ function getData()
         echo "ERROR empty json"
     elif [ $_err -ne 0 ] ; then
         case $_err in
-            1) echo "ERROR json response false or null" ;;
-            2) echo "ERROR usage problem or system error $_json" ;;
-            4) echo "ERROR json invalid $_json" ;;
-            *) echo "ERROR jq error $_err" ;;
+            1) echo -e "[✗]\t\tERROR json response false or null" ;;
+            2) echo -e "[✗]\t\tERROR usage problem or system error $_json" ;;
+            4) echo -e "[✗]\t\tERROR json invalid $_json" ;;
+            *) echo -e "[✗]\t\tERROR jq error $_err" ;;
         esac
         exit 1
     fi
+    echo -e "[✔]\t\tSUCCESS weather data retrieved"
 }
 
 # populates the climate data variables based on data in json
 function parseData()
 {
+    # start timer
+    echo -en "   \t\tparsing information"
+    tput cr
+    timer & TIMER_PID=$!
+
     # get temperature and weather conditions
     _temperature=$(echo "$_json" | jq -r '"\(.current.temperature_2m) \(.current_units.temperature_2m)"')
     _weatherCode=$(echo "$_json" | jq -r '"\(.current_units.weather_code) \(.current.weather_code)"')
@@ -303,6 +320,12 @@ function parseData()
     # echo "$_temperature,$_conditions,$_weatherCode,$_wind,$_cloudCover,$_rain,"\
     #      "$_humidity,$_pressure,$_elevation,$_locale,$_timezone,$_timezoneCode,$_currentTime,"\
     #      "$_observationTime,$_observationInterval,$_sunrise,$_sunset"
+
+    # stop timer
+    sleep 2
+    kill $TIMER_PID
+    tput cr el
+    echo -e "[✔]\t\tSUCCESS parsed data"
 }
 
 # sunny skies less than 10% cloud cover
@@ -562,4 +585,5 @@ _out+=("${_green_BOLD_FG}sunset:$_colorEnd  $_sunset")
 _out+=("${_green_BOLD_FG}source:$_colorEnd  Open-Metro.com")
 
 # print out the final results
+echo ""
 paste <(printf "%b\n" "${_icon[@]}") <(printf "%b\n" "${_out[@]}") | column -t -s $'\t'

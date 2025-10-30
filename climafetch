@@ -1,8 +1,8 @@
 #!/bin/bash
-# Climafetch (based off weather_cli) Version 0.2.0 by AptGetMe 2025
+# Climafetch (based off weather_cli) Version 0.3.0 by AptGetMe 2025
 #
 # Weather icons inspired by weather underground:  https://www.wunderground.com/
-# Ascii art provide by free website:  https://www.asciiart.eu/image-to-ascii
+# Ascii art created using website:  https://www.asciiart.eu/image-to-ascii
 
 # define version
 _version="0.3.0"
@@ -10,20 +10,19 @@ _version="0.3.0"
 # global flag for daytime or nighttime
 _dayTime=true
 
-# define global colors
+# define global colors (ANSI 256 color space)
 _yellow_BOLD_FG="\033[1;38;5;226m"
 _orange_BOLD_FG="\033[1;38;5;214m"
 _grey_BOLD_FG="\033[1;38;5;248m"
 _white_BOLD_FG="\033[1;38;5;255m"
 _green_BOLD_FG="\033[1;38;5;42m"
+_red_BOLD_FG="\033[1;38;5;196m"
 _azure_BOLD_FG="\033[1;38;5;26m"
 _blue_BOLD_FG="\033[1;38;5;51m"
-
 _sky1_BG="\033[48;5;105m"
 _sky2_BG="\033[48;5;69m"
 _sky3_BG="\033[48;5;33m"
 _sky4_BG="\033[48;5;21m"
-
 _colorEnd="\033[m"
 
 # global array to hold weather conditions
@@ -103,8 +102,7 @@ function decodeCompass()
     fi
 }
 
-# function that will play a ASCII animation until timeout or told to exit via kill
-# run in background
+# function that will play a ASCII animation until told to exit via kill
 function timer()
 {
     _timeout=${1:-100}
@@ -134,14 +132,17 @@ function timer()
         ;;
     esac
 
-    for i in $(seq 0 $_chunkWidth $(( _timeout * _chunkWidth )))
-    do
-        _offset=$(( i % $_length ))
-        tput cr
-        echo -en "[${_spinner:_offset:_chunkWidth}]"
-        sleep 0.1
+    while :; do
+        for i in $(seq 0 $_chunkWidth $(( _timeout * _chunkWidth )))
+        do
+            _offset=$(( i % $_length ))
+            tput cr
+            echo -en "[${_spinner:_offset:_chunkWidth}]"
+            sleep 0.1
+        done
     done
 }
+
 # function that will insert ANSI color codes into array of strings
 # _test=("hello world,S E,\033[1;38;5;226m \033[m"
 #       "good grief,5 7 9,\033[1;38;5;42m \033[1;38;5;51m \033[m")
@@ -196,10 +197,10 @@ function colorizeLine()
     echo -e "$_input"
 }
 
-# fetches the weather json file from Open-Metro.com api
+# function that fetches the weather json file from Open-Metro.com free api
 # example
 # getData "46.78 -92.10"
-# will return the weather data from 46.78°N 92.10°W (Duluth Minnesoda)
+# will populate the json variable with the weather data from 46.78°N 92.10°W (Duluth Minnesoda)
 function getData()
 {
     # start timer
@@ -237,11 +238,11 @@ function getData()
     # check for wget errors
     if [ $_err -ne 0 ]; then
         case $_err in
-            3) echo -e "[✗]\t\tERROR bad url" ;;
-            6|7|55|56) echo -e "[✗]\t\tERROR network problem" ;;
-            22) echo -e "[✗]\t\tERROR server response $_response" ;;
-            28) echo -e "[✗]\t\tERROR curl timeout" ;;
-            *) echo -e "[✗]\t\tERROR curl error $_err" ;;
+            3) echo -e "[$_red_BOLD_FG✗$_colorEnd]$_red_BOLD_FG\t\tERROR$_colorEnd bad url" ;;
+            6|7|55|56) echo -e "[$_red_BOLD_FG✗$_colorEnd]$_red_BOLD_FG\t\tERROR$_colorEnd network problem" ;;
+            22) echo -e "[$_red_BOLD_FG✗$_colorEnd]$_red_BOLD_FG\t\tERROR$_colorEnd server response $_response" ;;
+            28) echo -e "[$_red_BOLD_FG✗$_colorEnd]$_red_BOLD_FG\t\tERROR$_colorEnd web call timeout $_response" ;;
+            *) echo -e "[$_red_BOLD_FG✗$_colorEnd]$_red_BOLD_FG\t\tERROR$_colorEnd curl error $_err" ;;
         esac
         exit 1
     fi
@@ -253,20 +254,24 @@ function getData()
 
     # check if json is valid
     if [ -z "$_json" ] ; then
-        echo "ERROR empty json"
-    elif [ $_err -ne 0 ] ; then
+        echo -e "[$_red_BOLD_FG✗$_colorEnd]$_red_BOLD_FG\t\tERROR$_colorEnd empty json"
+        exit 1
+    fi
+    if [ $_err -ne 0 ] ; then
         case $_err in
-            1) echo -e "[✗]\t\tERROR json response false or null" ;;
-            2) echo -e "[✗]\t\tERROR usage problem or system error $_json" ;;
-            4) echo -e "[✗]\t\tERROR json invalid $_json" ;;
-            *) echo -e "[✗]\t\tERROR jq error $_err" ;;
+            1) echo -e "[$_red_BOLD_FG✗$_colorEnd]$_red_BOLD_FG\t\tERROR$_colorEnd json response false or null" ;;
+            2) echo -e "[$_red_BOLD_FG✗$_colorEnd]$_red_BOLD_FG\t\tERROR$_colorEnd usage problem or system error" ;;
+            4) echo -e "[$_red_BOLD_FG✗$_colorEnd]$_red_BOLD_FG\t\tERROR$_colorEnd json invalid $_response" ;;
+            *) echo -e "[$_red_BOLD_FG✗$_colorEnd]$_red_BOLD_FG\t\tERROR$_colorEnd jq error $_err" ;;
         esac
         exit 1
     fi
-    echo -e "[✔]\t\tSUCCESS weather data retrieved"
+
+    # echo success message
+    echo -e "[$_green_BOLD_FG✔$_colorEnd]$_green_BOLD_FG\t\tSUCCESS$_colorEnd weather data retrieved"
 }
 
-# populates the climate data variables based on data in json
+# function that populates the climate data variables based on data in json
 function parseData()
 {
     # start timer
@@ -325,10 +330,12 @@ function parseData()
     sleep 2
     kill $TIMER_PID
     tput cr el
-    echo -e "[✔]\t\tSUCCESS parsed data"
+
+    # echo success message
+    echo -e "[$_green_BOLD_FG✔$_colorEnd]$_green_BOLD_FG\t\tSUCCESS$_colorEnd parsed data"
 }
 
-# sunny skies less than 10% cloud cover
+# function for sunny skies icon less than 10% cloud cover
 function clear()
 {
     if [ $_dayTime = 'true' ]; then
@@ -366,7 +373,7 @@ function clear()
     fi
 }
 
-# between 10% and 40% cloud cover
+# function for skies icons between 10% and 40% cloud cover
 function mostlyClear()
 {
     if [ $_dayTime = 'true' ]; then
@@ -404,7 +411,7 @@ function mostlyClear()
     fi
 }
 
-# between 40% and 70% cloud cover
+# function for skies icon between 40% and 70% cloud cover
 function partlyCloudy()
 {
     if [ $_dayTime = 'true' ]; then
@@ -442,7 +449,7 @@ function partlyCloudy()
     fi
 }
 
-# greater than 70% cloud cover
+# function for skies icon greater than 70% cloud cover
 function cloudy()
 {
     _icon=("              ==::==           ,S 16 18 E, $_grey_BOLD_FG $_white_BOLD_FG $_grey_BOLD_FG $_colorEnd"
@@ -463,9 +470,12 @@ function cloudy()
 }
 
 ## SCRIPT ENTRYPOINT:
+
+# process arguments
 while getopts 'vh' _opt;
 do
     case "$_opt" in
+        # logo page
         v)
             _logo=( "           ;;;;;;;;    ..     ..   "
                     "         ;;........;;  ..   ..     "
@@ -483,6 +493,7 @@ do
             paste <(printf "%s\n" "${_logo[@]}") <(printf "$_appInfo") | lolcat
             exit
             ;;
+        # help and unknown arguments page
         h)
             ;&
         *)
@@ -514,7 +525,7 @@ fi
 # basic input varification
 if [ "$#" -eq 0 ]; then
     getData "$_toledo"
-# case for debug use test data
+# case for debug use test data file
 elif [ "$1" = "TestApiData" ]; then
     _json=$(jq '.' "$(dirname "$0")/TestApiData.json")
 # case for latitude and longitude coords

@@ -60,12 +60,12 @@ Thank you for wanting to try **Climafetch** 🥰️  Hopefully, this guide will 
 Open a new terminal and execute app.
 ```
 climafetch                  # defaults location to 41.65° N and -83.54° W (Toledo Ohio US)
-climafetch -- 46.78 -92.10  # set location to 46.78°N 92.10°W (Duluth Minnesoda)
+climafetch -- 46.78 -92.10  # set location to 46.78°N 92.10°W (Duluth Minnesoda US)
 ```
 Here are some commandline options you can use
 ```
 climafetch -v  # show version
-climafect -h   # show help page
+climafetch -h  # show help page
 ```
 
 ## 🗑️ Uninstall
@@ -89,7 +89,7 @@ A bash terminal and a text editor is sufficient for developing bash scripts! How
 - Test to make sure the environment is working by running script in the intergrated terminal
   ```
   ./climafetch
-  ./climafetch -- TestApiData  # will use the test data file in repo
+  ./climafetch -- TestApiData  # will use the test data file included in the cloned repo
   ```
 - Program away!
 
